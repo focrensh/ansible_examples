@@ -1,0 +1,15 @@
+- name : Get Active/Standby State
+  bigip_command:
+    provider: "{{ hostvars[inventory_hostname]['provider'] }}"
+    commands:
+      - "show sys failover"
+  delegate_to: localhost
+  register: fostate
+
+- name: Active LTM Commands
+  block:
+
+    - import_role:
+        name: big_as3_test
+
+  when: "'active' in fostate['stdout'][0]"
